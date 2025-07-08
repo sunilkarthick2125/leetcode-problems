@@ -1,0 +1,29 @@
+class Solution {
+public:
+    vector<string> v;
+
+
+    void solve(int n, int open, int close, string s) {
+        // Base case: if the number of closing brackets used equals 'n', we have a valid combination
+        if (close == n) {
+            v.push_back(s); // Add the valid combination to the result vector
+            return;
+        }
+
+        // If the number of open brackets used is less than 'n', we can add an open bracket
+        if (open < n) {
+            solve(n, open + 1, close, s + '('); // Recur with one more open bracket
+        }
+
+        // If the number of open brackets used is greater than the number of close brackets,
+        // we can safely add a close bracket
+        if (open > close) {
+            solve(n, open, close + 1, s + ')'); // Recur with one more close bracket
+        }
+    }
+
+    vector<string> generateParenthesis(int n) {
+        solve(n, 0, 0, ""); // Start recursion with 0 open and 0 close brackets and empty string
+        return v; // Return the result vector
+    }
+};
