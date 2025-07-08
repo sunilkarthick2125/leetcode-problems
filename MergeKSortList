@@ -1,0 +1,52 @@
+class Solution {
+public:
+    void merge(vector<int>& arr, int low, int mid, int high, vector<int>& temp) {
+        int i = low, j = mid + 1, k = 0;
+        while (i <= mid && j <= high) {
+            temp[k++] = (arr[i] <= arr[j]) ? arr[i++] : arr[j++];
+        }
+        while (i <= mid) temp[k++] = arr[i++];
+        while (j <= high) temp[k++] = arr[j++];
+        for (int m = 0; m < k; ++m) arr[low + m] = temp[m];
+    }
+
+    void mergeSort(vector<int>& nums, int low, int high, vector<int>& temp) {
+        if (low >= high) return;
+        int mid = (low + high) / 2;
+        mergeSort(nums, low, mid, temp);
+        mergeSort(nums, mid + 1, high, temp);
+        merge(nums, low, mid, high, temp);
+    }
+
+    void insertAtEnd(int value, ListNode*& head, ListNode*& tail) {
+        ListNode* newNode = new ListNode(value);
+        if (!head) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        vector<int> nums;
+        for (auto list : lists) {
+            while (list) {
+                nums.push_back(list->val);
+                list = list->next;
+            }
+        }
+
+        int n = nums.size();
+        vector<int> temp(n);
+        mergeSort(nums, 0, n - 1, temp);
+
+        ListNode* head = nullptr;
+        ListNode* tail = nullptr;
+        for (int val : nums) {
+            insertAtEnd(val, head, tail);
+        }
+
+        return head;
+    }
+};
